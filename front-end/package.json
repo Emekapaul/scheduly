@@ -2,7 +2,6 @@
   "name": "front-end",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://Emekapaul.github.io/scheduly",
   "dependencies": {
     "@fullcalendar/common": "^5.11.5",
     "@fullcalendar/core": "^6.1.15",
