@@ -1,6 +1,7 @@
 import { createApp } from "./appbuild.js";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
+import cors from "cors";
 
 dotenv.config();
 
@@ -8,7 +9,7 @@ const PORT = process.env.PORT || 3003;
 const HOST = process.env.HOST || "localhost";
 
 mongoose
-  .connect(process.env.MONGO_URI)
+  .connect(process.env.MONGODB_URI)
   .then(() => {
     console.log("✅ MongoDB Connected");
   })
@@ -18,6 +19,17 @@ mongoose
   });
 
 const app = createApp();
+
+// Add CORS configuration
+app.use(
+  cors({
+    origin:
+      process.env.NODE_ENV === "production"
+        ? process.env.FRONTEND_URL
+        : "http://localhost:3000",
+    credentials: true,
+  })
+);
 
 app.listen(PORT, HOST, () => {
   console.log(`Server is running on http://${HOST}:${PORT}`);

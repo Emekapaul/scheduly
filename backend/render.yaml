@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: scheduly-backend
+    env: node
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: SESSIONSECRET
+        sync: false
+      - key: MONGODB_URI
+        sync: false
