@@ -21,15 +21,7 @@ mongoose
 const app = createApp();
 
 // Add CORS configuration
-app.use(
-  cors({
-    origin:
-      process.env.NODE_ENV === "production"
-        ? process.env.FRONTEND_URL
-        : "http://localhost:3000",
-    credentials: true,
-  })
-);
+app.use(cors());
 
 app.listen(PORT, HOST, () => {
   console.log(`Server is running on http://${HOST}:${PORT}`);
