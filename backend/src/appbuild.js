@@ -3,6 +3,7 @@ import passport from "passport";
 import session from "express-session";
 import MongoStore from "connect-mongo";
 import "./AuthStrategy/local-strategy.js";
+import cors from "cors";
 import router from "./routes/main.js";
 
 export function createApp() {
@@ -22,7 +23,7 @@ export function createApp() {
       cookie: {
         maxAge: 14 * 24 * 60 * 60 * 1000, // = 14 days
         secure: process.env.NODE_ENV === "production",
-        sameSite: "lax",
+        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
       },
     })
   );
@@ -32,6 +33,15 @@ export function createApp() {
   app.use(
     express.urlencoded({
       extended: true,
+    })
+  );
+  app.use(
+    cors({
+      origin:
+        process.env.NODE_ENV === "production"
+          ? process.env.FRONTEND_URL
+          : "http://localhost:3000",
+      credentials: true,
     })
   );
 

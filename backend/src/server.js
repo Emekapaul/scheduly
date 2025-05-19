@@ -1,7 +1,6 @@
 import { createApp } from "./appbuild.js";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
-import cors from "cors";
 
 dotenv.config();
 
@@ -19,9 +18,6 @@ mongoose
   });
 
 const app = createApp();
-
-// Add CORS configuration
-app.use(cors());
 
 app.listen(PORT, HOST, () => {
   console.log(`Server is running on http://${HOST}:${PORT}`);

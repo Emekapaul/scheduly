@@ -1,5 +1,5 @@
 import React, { createContext, useState, useEffect, useContext } from "react";
-import axios from 'axios';
+import axiosInstance from "../utils/axios";
 import { toast } from "react-toastify";
 import { AuthContext } from "./AuthContext";
 import handleCrudError from "../components/handleCrudError";
@@ -15,7 +15,7 @@ export const EventProvider = ({ children }) => {
   // Load events from localStorage when the component mounts
   useEffect(() => {
     if (isAuthenticated) {
-      const storedEvents = localStorage.getItem('events');
+      const storedEvents = localStorage.getItem("events");
       if (storedEvents) {
         setEventData(JSON.parse(storedEvents));
       } else {
@@ -27,31 +27,25 @@ export const EventProvider = ({ children }) => {
   // Save events to localStorage whenever eventData changes
   useEffect(() => {
     if (isAuthenticated && eventData.length > 0) {
-      localStorage.setItem('events', JSON.stringify(eventData));
+      localStorage.setItem("events", JSON.stringify(eventData));
     }
   }, [isAuthenticated, eventData]);
 
   useEffect(() => {
     if (!isAuthenticated) {
-      localStorage.removeItem('events');
+      localStorage.removeItem("events");
       setEventData([]);
     }
   }, [isAuthenticated]);
-
-
-  //localStorage.removeItem('events');
-  //console.log('Events ', localStorage.getItem('events'));
-  //localStorage.removeItem('user');
-  console.log(localStorage.getItem('user'));
 
   // CRUD operations
   // Function to create a new event
   const createEvent = async (newEvent) => {
     try {
-      const response = await axios.post('/events', newEvent);
+      const response = await axiosInstance.post("/events", newEvent);
       const createdEvent = response.data;
       setEventData((prevEvents) => [...prevEvents, createdEvent]);
-      toast.success('Event created successfully');
+      toast.success("Event created successfully");
     } catch (error) {
       handleCrudError(error);
     }
@@ -59,7 +53,7 @@ export const EventProvider = ({ children }) => {
 
   const fetchEvents = async () => {
     try {
-      const response = await axios.get('/events');
+      const response = await axiosInstance.get("/events");
       const events = response.data;
       setEventData(events);
     } catch (error) {
@@ -68,31 +62,40 @@ export const EventProvider = ({ children }) => {
   };
 
   const updateEvent = async (updatedEvent) => {
-    console.log('Updated Event ', updatedEvent);
     try {
-      const response = await axios.put(`/events/${updatedEvent._id}`, updatedEvent);
+      const response = await axiosInstance.put(
+        `/events/${updatedEvent._id}`,
+        updatedEvent
+      );
       const updatedEventData = response.data;
-      setEventData((prevEvents) => prevEvents.map(event => event._id === updatedEventData._id ? updatedEventData : event));
-      toast.success('Event updated successfully');
+      setEventData((prevEvents) =>
+        prevEvents.map((event) =>
+          event._id === updatedEventData._id ? updatedEventData : event
+        )
+      );
+      toast.success("Event updated successfully");
     } catch (error) {
       handleCrudError(error);
     }
   };
 
   const deleteEvent = async (eventId) => {
-    console.log('Event ID ', eventId);
     try {
-      await axios.delete(`/events/${eventId}`);
-      setEventData((prevEvents) => prevEvents.filter(event => event._id !== eventId));
-      toast.success('Event deleted successfully');
+      await axiosInstance.delete(`/events/${eventId}`);
+      setEventData((prevEvents) =>
+        prevEvents.filter((event) => event._id !== eventId)
+      );
+      toast.success("Event deleted successfully");
     } catch (error) {
       handleCrudError(error);
     }
   };
 
   return (
-    <EventContext.Provider value={{ eventData, createEvent, fetchEvents, updateEvent, deleteEvent }}>
+    <EventContext.Provider
+      value={{ eventData, createEvent, fetchEvents, updateEvent, deleteEvent }}
+    >
       {children}
     </EventContext.Provider>
-  )
-}
+  );
+};
