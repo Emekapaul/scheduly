@@ -6,7 +6,7 @@ import cors from "cors";
 dotenv.config();
 
 const PORT = process.env.PORT || 3003;
-const HOST = process.env.HOST || "localhost";
+const HOST = process.env.HOST || "0.0.0.0";
 
 mongoose
   .connect(process.env.MONGODB_URI)
