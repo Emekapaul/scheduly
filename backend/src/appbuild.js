@@ -9,6 +9,21 @@ import router from "./routes/main.js";
 export function createApp() {
   const app = express();
 
+  app.use(
+    cors({
+      origin:
+        process.env.NODE_ENV === "production"
+          ? process.env.FRONTEND_URL
+          : "http://localhost:3000",
+      credentials: true,
+      allowedHeaders: [
+        "Content-Type",
+        "Authorization",
+        "X-Requested-With",
+        "Accept",
+      ],
+    })
+  );
   app.use(express.json());
   app.use(
     session({
@@ -24,6 +39,7 @@ export function createApp() {
         maxAge: 14 * 24 * 60 * 60 * 1000, // = 14 days
         secure: process.env.NODE_ENV === "production",
         sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+        path: "/",
       },
     })
   );
@@ -33,15 +49,6 @@ export function createApp() {
   app.use(
     express.urlencoded({
       extended: true,
-    })
-  );
-  app.use(
-    cors({
-      origin:
-        process.env.NODE_ENV === "production"
-          ? process.env.FRONTEND_URL
-          : "http://localhost:3000",
-      credentials: true,
     })
   );
 
