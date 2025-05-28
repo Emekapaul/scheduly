@@ -13,7 +13,7 @@ export function createApp() {
     cors({
       origin:
         process.env.NODE_ENV === "production"
-          ? process.env.FRONTEND_URL
+          ? "https://scheduly-5m0y.onrender.com"
           : "http://localhost:3000",
       credentials: true,
       methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
@@ -23,6 +23,7 @@ export function createApp() {
         "X-Requested-With",
         "Accept",
       ],
+      exposedHeaders: ["set-cookie"],
     })
   );
   app.use(express.json());
@@ -40,6 +41,7 @@ export function createApp() {
         maxAge: 14 * 24 * 60 * 60 * 1000, // = 14 days
         secure: process.env.NODE_ENV === "production",
         sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+        httpOnly: true,
         path: "/",
       },
     })

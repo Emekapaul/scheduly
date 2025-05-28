@@ -20,6 +20,7 @@ axiosInstance.interceptors.request.use(
     // Log the full URL and credentials setting
     console.log("Making request to:", `${config.baseURL}${config.url}`);
     console.log("With credentials:", config.withCredentials);
+    console.log("Current cookies:", document.cookie);
     return config;
   },
   (error) => {
@@ -35,6 +36,7 @@ axiosInstance.interceptors.response.use(
       status: response.status,
       headers: response.headers,
       cookies: document.cookie,
+      setCookie: response.headers["set-cookie"],
     });
     return response;
   },
@@ -44,6 +46,7 @@ axiosInstance.interceptors.response.use(
         status: error.response.status,
         data: error.response.data,
         headers: error.response.headers,
+        cookies: document.cookie,
       });
     } else {
       console.error("Network error:", error.message);
