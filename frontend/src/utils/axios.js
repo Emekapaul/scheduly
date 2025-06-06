@@ -21,6 +21,10 @@ axiosInstance.interceptors.request.use(
     console.log("Making request to:", `${config.baseURL}${config.url}`);
     console.log("With credentials:", config.withCredentials);
     console.log("Current cookies:", document.cookie);
+
+    // Ensure credentials are included
+    config.withCredentials = true;
+
     return config;
   },
   (error) => {
@@ -38,6 +42,11 @@ axiosInstance.interceptors.response.use(
       cookies: document.cookie,
       setCookie: response.headers["set-cookie"],
     });
+
+    // Log if session cookie is present
+    const hasSessionCookie = document.cookie.includes("scheduly.sid");
+    console.log("Session cookie present:", hasSessionCookie);
+
     return response;
   },
   (error) => {
@@ -48,6 +57,12 @@ axiosInstance.interceptors.response.use(
         headers: error.response.headers,
         cookies: document.cookie,
       });
+
+      // Special handling for 401 errors
+      if (error.response.status === 401) {
+        console.log("Session might be expired, clearing local storage");
+        localStorage.removeItem("user");
+      }
     } else {
       console.error("Network error:", error.message);
     }

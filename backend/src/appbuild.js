@@ -13,7 +13,7 @@ export function createApp() {
     cors({
       origin:
         process.env.NODE_ENV === "production"
-          ? process.env.FRONTEND_URL
+          ? "https://scheduly-frontend.onrender.com"
           : "http://localhost:3000",
       credentials: true,
       methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD"],
@@ -23,8 +23,10 @@ export function createApp() {
         "X-Requested-With",
         "Accept",
       ],
+      exposedHeaders: ["set-cookie"],
     })
   );
+
   app.use(express.json());
   app.use(
     session({
@@ -40,11 +42,19 @@ export function createApp() {
         maxAge: 14 * 24 * 60 * 60 * 1000, // = 14 days
         secure: process.env.NODE_ENV === "production",
         sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-        path: "/",
         httpOnly: true,
+        path: "/",
+        // Remove domain setting to let the browser handle it automatically
       },
     })
   );
+
+  app.use((req, res, next) => {
+    console.log("Session ID:", req.sessionID);
+    console.log("Session:", req.session);
+    console.log("Cookie header:", req.headers.cookie);
+    next();
+  });
 
   app.use(passport.initialize());
   app.use(passport.session());
