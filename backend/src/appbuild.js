@@ -13,7 +13,7 @@ export function createApp() {
     cors({
       origin:
         process.env.NODE_ENV === "production"
-          ? "https://scheduly-frontend.onrender.com"
+          ? "https://scheduly-5m0y.onrender.com"
           : "http://localhost:3000",
       credentials: true,
       methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD"],
