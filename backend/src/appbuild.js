@@ -22,8 +22,10 @@ export function createApp() {
         "Authorization",
         "X-Requested-With",
         "Accept",
+        "Cookie",
+        "Set-Cookie",
       ],
-      exposedHeaders: ["set-cookie"],
+      exposedHeaders: ["Set-Cookie"],
     })
   );
 
@@ -44,7 +46,6 @@ export function createApp() {
         sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
         httpOnly: true,
         path: "/",
-        // Remove domain setting to let the browser handle it automatically
       },
     })
   );
@@ -53,6 +54,7 @@ export function createApp() {
     console.log("Session ID:", req.sessionID);
     console.log("Session:", req.session);
     console.log("Cookie header:", req.headers.cookie);
+    console.log("Origin:", req.headers.origin);
     next();
   });
 

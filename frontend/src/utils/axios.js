@@ -21,6 +21,7 @@ axiosInstance.interceptors.request.use(
     console.log("Making request to:", `${config.baseURL}${config.url}`);
     console.log("With credentials:", config.withCredentials);
     console.log("Current cookies:", document.cookie);
+    console.log("Request headers:", config.headers);
 
     // Ensure credentials are included
     config.withCredentials = true;
@@ -36,16 +37,26 @@ axiosInstance.interceptors.request.use(
 // Add response interceptor for debugging
 axiosInstance.interceptors.response.use(
   (response) => {
+    const setCookieHeader =
+      response.headers["set-cookie"] || response.headers["Set-Cookie"];
+
     console.log("Response received:", {
       status: response.status,
       headers: response.headers,
       cookies: document.cookie,
-      setCookie: response.headers["set-cookie"],
+      setCookie: setCookieHeader,
+      responseData: response.data,
     });
 
     // Log if session cookie is present
     const hasSessionCookie = document.cookie.includes("scheduly.sid");
     console.log("Session cookie present:", hasSessionCookie);
+
+    if (setCookieHeader) {
+      console.log("Set-Cookie header found:", setCookieHeader);
+    } else {
+      console.log("No Set-Cookie header in response");
+    }
 
     return response;
   },
