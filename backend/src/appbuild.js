@@ -25,7 +25,7 @@ export function createApp() {
         "Cookie",
         "Set-Cookie",
       ],
-      exposedHeaders: ["Set-Cookie"],
+      exposedHeaders: ["Set-Cookie", "set-cookie"],
     })
   );
 
